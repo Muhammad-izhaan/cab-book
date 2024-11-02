@@ -81,6 +81,6 @@ def handle_send_message(data):
         'sender_name': data['sender_name']
     }, room=data['ride_id'])
 
-if __name__ == '__main__'
+if __name__ == '__main__':
    app.run(host="0.0.0.0", port=5000)
     
