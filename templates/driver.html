@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5; /* Light grey background for a soft look */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px; /* Limit max width for better readability */
+            padding: 30px;
+            position: relative;
+        }
+
+        h1 {
+            color: #0072ff; /* Blue color for header */
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5em; /* Increased font size for better visibility */
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0072ff; /* Change border color on focus */
+            box-shadow: 0 0 8px rgba(0, 114, 255, 0.3); /* Shadow effect */
+        }
+
+        #requests {
+            margin-top: 30px; /* Space above pending requests */
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em; /* Larger font for section heading */
+            border-bottom: 2px solid #0072ff; /* Underline effect */
+            padding-bottom: 10px;
+        }
+
+        #rideRequests {
+            list-style: none; /* Remove bullet points */
+            padding: 0;
+            max-height: 300px; /* Limit height for scrolling */
+            overflow-y: auto; /* Enable scrolling */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9; /* Light background for list */
+        }
+
+        #rideRequests li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* Separator between requests */
+            color: #555;
+        }
+
+        #rideRequests li:last-child {
+            border-bottom: none; /* Remove border for last item */
+        }
+
+        /* Message for no ride requests */
+        #noRequests {
+            display: none; /* Hidden by default */
+            color: #777; /* Grey color for the message */
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em; /* Slightly larger font size */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Driver Dashboard</h1>
+        <label for="driver_name">Your Name:</label>
+        <input type="text" id="driver_name" placeholder="Enter your name" required>
+        <div id="requests">
+            <h2>Pending Ride Requests</h2>
+            <ul id="rideRequests"></ul>
+            <p id="noRequests">No rides yet.</p> <!-- Message for no ride requests -->
+        </div>
+    </div>
+    <script src="/static/driver.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab Booking - User</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Book a Cab</h1>
+        <div class="booking-form">
+            <label for="user_name">Your Name:</label>
+            <input type="text" id="user_name" placeholder="Enter your name" required>
+            
+            <label for="user_phone">Your Phone Number:</label>
+            <input type="text" id="user_phone" placeholder="Enter your phone number" required>
+            
+            <label for="pickup">Pickup Location:</label>
+            <input type="text" id="pickup" placeholder="Enter pickup location" required>
+            
+            <label for="dropoff">Dropoff Location:</label>
+            <input type="text" id="dropoff" placeholder="Enter dropoff location" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" placeholder="Enter additional details about the place" required></textarea>
+            
+            <button onclick="bookCab()">Confirm Booking</button>
+        </div>
+        <div id="result"></div>
+    </div>
+    <script src="/static/user.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            color: #0072ff;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #message_input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+
+        #send_message {
+            padding: 10px 15px;
+            background: #0072ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        #send_message:hover {
+            background: #005ecf;
+        }
+
+        .message-container {
+            display: flex;
+            margin: 10px 0;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 80%;
+            clear: both;
+        }
+
+        .message.user {
+            background: #d4edda; /* Light green for sent messages */
+            margin-left: auto; /* Align to the right */
+            color: #155724; /* Darker green for text */
+        }
+
+        .message.driver {
+            background: #cce5ff; /* Light blue for received messages */
+            color: #004085; /* Darker blue for text */
+        }
+
+        .message-container.user {
+            justify-content: flex-end; /* Align user messages to the right */
+        }
+
+        .message-container.driver {
+            justify-content: flex-start; /* Align driver messages to the left */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Chat for Ride ID: {{ ride_id }}</h1>
+    <p><strong>Pickup:</strong> {{ pickup }}</p>
+    <p><strong>Dropoff:</strong> {{ dropoff }}</p>
+    <p><strong>Description:</strong> {{ description }}</p>
+    <p><strong>User:</strong> {{ user_name }}</p>
+    <p><strong>Driver:</strong> {{ driver_name }}</p>
+
+    <div id="messages"></div>
+
+    <div style="display: flex; margin-top: 10px;">
+        <input id="message_input" type="text" placeholder="Type your message here...">
+        <button id="send_message">Send</button>
+    </div>
+</div>
+
+<script>
+    const rideId = {{ ride_id }};
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.emit('join_chat', rideId);
+
+    socket.on('receive_message', function(data) {
+        const messageElement = $('<div>').addClass('message-container driver'); // Set container for driver messages
+        const msg = $('<div>').addClass('message driver').text(data.message); // Driver message styling
+        msg.prepend($('<strong>').text(data.sender_name + ': ')); // Prepend driver's name
+        messageElement.append(msg);
+        $('#messages').append(messageElement);
+        $('#messages').scrollTop($('#messages')[0].scrollHeight); // Auto scroll to bottom
+    });
+
+    $('#send_message').click(function() {
+        const message = $('#message_input').val();
+        const senderName = '{{ user_name }}';  // User's name
+        const messageElement = $('<div>').addClass('message-container user'); // Set container for user messages
+        const msg = $('<div>').addClass('message user').text(message); // User message styling
+        msg.prepend($('<strong>').text('You: ')); // Prepend "You:" for user messages
+        messageElement.append(msg);
+        $('#messages').append(messageElement);
+        $('#messages').scrollTop($('#messages')[0].scrollHeight); // Auto scroll to bottom
+
+        // Emit the message after displaying it
+        socket.emit('send_message', { message: message, sender_name: senderName, ride_id: rideId });
+        $('#message_input').val(''); // Clear the input after sending
+    });
+</script>
+
+</body>
+</html>
