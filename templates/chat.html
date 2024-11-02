@@ -82,6 +82,7 @@
 
         .message-container {
             display: flex;
+            justify-content: flex-start;
             margin: 10px 0;
         }
 
@@ -102,14 +103,6 @@
         .message.driver {
             background: #cce5ff; /* Light blue for received messages */
             color: #004085; /* Darker blue for text */
-        }
-
-        .message-container.user {
-            justify-content: flex-end; /* Align user messages to the right */
-        }
-
-        .message-container.driver {
-            justify-content: flex-start; /* Align driver messages to the left */
         }
     </style>
 </head>
@@ -138,9 +131,18 @@
     socket.emit('join_chat', rideId);
 
     socket.on('receive_message', function(data) {
-        const messageElement = $('<div>').addClass('message-container driver'); // Set container for driver messages
-        const msg = $('<div>').addClass('message driver').text(data.message); // Driver message styling
-        msg.prepend($('<strong>').text(data.sender_name + ': ')); // Prepend driver's name
+        const messageElement = $('<div>').addClass('message-container');
+        const msg = $('<div>').addClass('message').text(data.message); // Only the message text
+        const senderName = data.sender_name; // Get the sender's name from data
+
+        // Display the sender's name and adjust message styling based on sender
+        if (senderName === '{{ user_name }}') {
+            msg.addClass('user'); // Sent messages
+            msg.prepend($('<strong>').text('You: ')); // Prepend "You:" for user messages
+        } else {
+            msg.addClass('driver'); // Received messages
+            msg.prepend($('<strong>').text(senderName + ': ')); // Prepend driver's name for received messages
+        }
         messageElement.append(msg);
         $('#messages').append(messageElement);
         $('#messages').scrollTop($('#messages')[0].scrollHeight); // Auto scroll to bottom
@@ -149,14 +151,6 @@
     $('#send_message').click(function() {
         const message = $('#message_input').val();
         const senderName = '{{ user_name }}';  // User's name
-        const messageElement = $('<div>').addClass('message-container user'); // Set container for user messages
-        const msg = $('<div>').addClass('message user').text(message); // User message styling
-        msg.prepend($('<strong>').text('You: ')); // Prepend "You:" for user messages
-        messageElement.append(msg);
-        $('#messages').append(messageElement);
-        $('#messages').scrollTop($('#messages')[0].scrollHeight); // Auto scroll to bottom
-
-        // Emit the message after displaying it
         socket.emit('send_message', { message: message, sender_name: senderName, ride_id: rideId });
         $('#message_input').val(''); // Clear the input after sending
     });
