@@ -132,16 +132,11 @@
 
     socket.on('receive_message', function(data) {
         const messageElement = $('<div>').addClass('message-container');
-        const msg = $('<div>').addClass('message').text(data.message); // Only the message text
-        const senderName = data.sender_name; // Get the sender's name from data
-
-        // Display the sender's name and adjust message styling based on sender
-        if (senderName === '{{ user_name }}') {
+        const msg = $('<div>').addClass('message').text(data.sender_name + ': ' + data.message);
+        if (data.sender_name === '{{ user_name }}') {
             msg.addClass('user'); // Sent messages
-            msg.prepend($('<strong>').text('You: ')); // Prepend "You:" for user messages
         } else {
             msg.addClass('driver'); // Received messages
-            msg.prepend($('<strong>').text(senderName + ': ')); // Prepend driver's name for received messages
         }
         messageElement.append(msg);
         $('#messages').append(messageElement);
